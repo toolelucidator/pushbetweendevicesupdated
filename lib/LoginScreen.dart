@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
 import 'HomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -17,16 +20,19 @@ class _LoginScreenState extends State<LoginScreen> {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-
   @override
-  void initState(){
-
+  void initState() {
     checkUserAuth();
     super.initState();
-    Firebase.initializeApp().whenComplete(() {
-      print("completed");
-      setState(() {});
-    });
+  }
+
+  void _initializeApp() async {
+    // Perform your asynchronous operations here, such as fetching data
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // Update the state of your widget if necessary
+    setState(() {});
   }
 
   checkUserAuth() async {
@@ -38,10 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(usuarioActual: user.email!,),
-            ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                  usuarioActual: user.email!,
+                ),
+              ));
         });
       }
     } catch (e) {
@@ -69,23 +77,21 @@ class _LoginScreenState extends State<LoginScreen> {
             .doc(user?.uid)
             .set({"email": user?.email, "fcmToken": token});
 
-       WidgetsBinding.instance.addPostFrameCallback((_) {
-         Navigator.pushReplacement(
-             context,
-             MaterialPageRoute(
-               builder: (context) => HomeScreen(usuarioActual: user?.email.toString()),
-             ));
-       });
-      }).catchError(
-              (error) => {});
-
-
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    HomeScreen(usuarioActual: user?.email.toString()),
+              ));
+        });
+      }).catchError((error) => {});
     } else {
-     // showToast("Provide email and password", gravity: Toast.CENTER);
+      // showToast("Provide email and password", gravity: Toast.CENTER);
     }
   }
 
- /* void showToast(String msg, {required int duration, required int gravity}) {
+  /* void showToast(String msg, {required int duration, required int gravity}) {
     Toast.show(msg, textStyle: context, duration: duration, gravity: gravity);
   }*/
 
@@ -137,5 +143,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-

@@ -42,11 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    /*FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      Navigator.pushNamed(context, '/message',
-          arguments: MessageArguments(message, true));
-    });*/
+   //  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+   //    print('A new onMessageOpenedApp event was published!');
+   //    Navigator.pushNamed(context, '/message',
+   //        arguments: MessageArguments(message, true));
+   //  });
 
 
     super.initState();
@@ -122,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
-
   _getUsers() async {
     QuerySnapshot snapshot = await db.collection("users").get();
     setState(() {
